@@ -13,3 +13,10 @@ endif
 build:
 	go build -o dist/api/$(BUILD_OUTPUT_FILENAME) $(BUILD_FLAGS) ./cmd/api
 	go build -o dist/console/$(BUILD_OUTPUT_FILENAME) $(BUILD_FLAGS) ./cmd/console
+
+dev:
+	test -f .env && . .env; air -c .air.toml .
+
+install:
+	@# install Air verse
+	go install 'github.com/air-verse/air@latest'

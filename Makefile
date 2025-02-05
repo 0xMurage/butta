@@ -23,3 +23,7 @@ dev:
 install:
 	@# install Air verse
 	go install 'github.com/air-verse/air@latest'
+
+
+%: #catch all command
+	@: # do nothing silently

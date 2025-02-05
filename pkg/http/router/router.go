@@ -48,6 +48,13 @@ type CustomServeMux struct {
 	middleware []MiddlewareFunc
 }
 
+// ServeHTTP is the HTTP handler for the CustomServeMux, processing incoming requests.
+// It delegates the request to the appropriate CustomRoute based on the request method and endpoint.
+func (c *CustomServeMux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	// Delegate the request to the underlying http.ServeMux
+	c.mux.ServeHTTP(w, req)
+}
+
 // Use add middleware that will be applied to this server mux
 func (c *CustomServeMux) Use(middleware ...MiddlewareFunc) {
 	c.middleware = append(c.middleware, middleware...)

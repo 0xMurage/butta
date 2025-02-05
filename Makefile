@@ -19,10 +19,29 @@ build:
 dev:
 	test -f .env && . .env; air -c .air.toml .
 
+.PHONY: db\:dump
+db\:dump:
+	dbmate $([[ -f .env ]] && echo '--env-file .env') dump
+
+.PHONY: db\:migrate
+db\:migrate:
+	dbmate $([[ -f .env ]] && echo '--env-file .env') up
+
+.PHONY: db\:rollback
+db\:rollback:
+	dbmate $([[ -f .env ]] && echo '--env-file .env') rollback
+
+.PHONY: db\:cm
+db\:cm:
+	 @dbmate $([[ -f .env ]] && echo '--env-file .env') new $(filter-out $@,$(MAKECMDGOALS))
+
+
 .PHONY: install
 install:
 	@# install Air verse
 	go install 'github.com/air-verse/air@latest'
+	@# install db-mate to manage migrations
+	go install 'github.com/amacneil/dbmate/v2@v2.25'
 
 
 %: #catch all command

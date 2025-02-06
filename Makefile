@@ -39,11 +39,12 @@ db\:rollback:
 db\:cm:
 	 @dbmate $([[ -f .env ]] && echo '--env-file .env') new $(filter-out $@,$(MAKECMDGOALS))
 
-
 .PHONY: db\:seed
 db\:seed:
 	dbmate $([[ -f .env ]] && echo '--env-file .env') --migrations-table 'seed_migrations'	--migrations-dir './database/seeders' --no-dump-schema up
 
+river\:db-dump:
+	 [[ -f .env ]] &&  source .env && ./scripts/river-db-migrations.sh
 
 .PHONY: install
 install:
@@ -51,6 +52,8 @@ install:
 	go install 'github.com/air-verse/air@latest'
 	@# install db-mate to manage migrations
 	go install 'github.com/amacneil/dbmate/v2@v2.25'
+	@# install river cmd client for migrations export
+	go install 'github.com/riverqueue/river/cmd/river@v0.16'
 
 
 %: #catch all command

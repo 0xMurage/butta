@@ -19,6 +19,9 @@ build:
 dev:
 	test -f .env && . .env; air -c .air.toml .
 
+db\:clean-dump:
+	 [[ -f .env ]] &&  source .env && ./scripts/clean-schema.sh
+
 .PHONY: db\:dump
 db\:dump:
 	dbmate $([[ -f .env ]] && echo '--env-file .env') dump
@@ -26,6 +29,7 @@ db\:dump:
 .PHONY: db\:migrate
 db\:migrate:
 	dbmate $([[ -f .env ]] && echo '--env-file .env') up
+	$(MAKE) db\:clean-dump
 
 .PHONY: db\:rollback
 db\:rollback:

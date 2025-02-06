@@ -36,6 +36,11 @@ db\:cm:
 	 @dbmate $([[ -f .env ]] && echo '--env-file .env') new $(filter-out $@,$(MAKECMDGOALS))
 
 
+.PHONY: db\:seed
+db\:seed:
+	dbmate $([[ -f .env ]] && echo '--env-file .env') --migrations-table 'seed_migrations'	--migrations-dir './database/seeders' --no-dump-schema up
+
+
 .PHONY: install
 install:
 	@# install Air verse

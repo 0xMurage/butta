@@ -132,6 +132,53 @@ CREATE TABLE river_queue (
 
 
 --
+-- Name: user_auth_methods; Type: TABLE;  Owner: -
+--
+
+CREATE TABLE user_auth_methods (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_profile_id uuid NOT NULL,
+    auth_provider_id bigint NOT NULL,
+    login_identifier text NOT NULL,
+    secret_hash text,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: user_auth_providers; Type: TABLE;  Owner: -
+--
+
+CREATE TABLE user_auth_providers (
+    id integer NOT NULL,
+    name text NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
+    properties jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+--
+-- Name: user_auth_providers_id_seq; Type: SEQUENCE;  Owner: -
+--
+
+CREATE SEQUENCE user_auth_providers_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_auth_providers_id_seq; Type: SEQUENCE OWNED BY;  Owner: -
+--
+
+ALTER SEQUENCE user_auth_providers_id_seq OWNED BY soi.user_auth_providers.id;
+
+
+--
 -- Name: users; Type: TABLE;  Owner: -
 --
 
@@ -151,6 +198,13 @@ CREATE TABLE users (
 --
 
 ALTER TABLE ONLY river_job ALTER COLUMN id SET DEFAULT nextval('soi.river_job_id_seq'::regclass);
+
+
+--
+-- Name: user_auth_providers id; Type: DEFAULT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_providers ALTER COLUMN id SET DEFAULT nextval('soi.user_auth_providers_id_seq'::regclass);
 
 
 --
@@ -207,6 +261,38 @@ ALTER TABLE ONLY river_migration
 
 ALTER TABLE ONLY river_queue
     ADD CONSTRAINT river_queue_pkey PRIMARY KEY (name);
+
+
+--
+-- Name: user_auth_methods user_auth_methods_auth_provider_id_login_identifier_key; Type: CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_methods
+    ADD CONSTRAINT user_auth_methods_auth_provider_id_login_identifier_key UNIQUE (auth_provider_id, login_identifier);
+
+
+--
+-- Name: user_auth_methods user_auth_methods_pkey; Type: CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_methods
+    ADD CONSTRAINT user_auth_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_auth_providers user_auth_providers_name_key; Type: CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_providers
+    ADD CONSTRAINT user_auth_providers_name_key UNIQUE (name);
+
+
+--
+-- Name: user_auth_providers user_auth_providers_pkey; Type: CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_providers
+    ADD CONSTRAINT user_auth_providers_pkey PRIMARY KEY (id);
 
 
 --
@@ -276,6 +362,22 @@ ALTER TABLE ONLY river_client_queue
 
 
 --
+-- Name: user_auth_methods user_auth_methods_auth_provider_id_fkey; Type: FK CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_methods
+    ADD CONSTRAINT user_auth_methods_auth_provider_id_fkey FOREIGN KEY (auth_provider_id) REFERENCES user_auth_providers(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: user_auth_methods user_auth_methods_user_profile_id_fkey; Type: FK CONSTRAINT;  Owner: -
+--
+
+ALTER TABLE ONLY user_auth_methods
+    ADD CONSTRAINT user_auth_methods_user_profile_id_fkey FOREIGN KEY (user_profile_id) REFERENCES users(id) ON DELETE RESTRICT;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -292,4 +394,6 @@ INSERT INTO migrations (version) VALUES
     ('20250206053503'),
     ('20250206053505'),
     ('20250206053507'),
-    ('20250206053509');
+    ('20250206053509'),
+    ('20250219034909'),
+    ('20250219034913');

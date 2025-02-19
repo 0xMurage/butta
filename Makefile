@@ -46,6 +46,9 @@ db\:seed:
 river\:db-dump:
 	 [[ -f .env ]] &&  source .env && ./scripts/river-db-migrations.sh
 
+sqlc:
+	sqlc generate
+
 .PHONY: install
 install:
 	@# install Air verse
@@ -54,6 +57,9 @@ install:
 	go install 'github.com/amacneil/dbmate/v2@v2.25'
 	@# install river cmd client for migrations export
 	go install 'github.com/riverqueue/river/cmd/river@v0.16'
+	@# sqlc to generate type safe code from sql
+	go install 'github.com/sqlc-dev/sqlc/cmd/sqlc@latest'
+
 
 
 %: #catch all command

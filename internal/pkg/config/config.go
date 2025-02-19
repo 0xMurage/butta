@@ -1,5 +1,9 @@
 package config
 
+type Session struct {
+	Secret   string `env:"SESSION_SECRET,required"`
+	Lifetime uint8  `env:"SESSION_LIFETIME" envDefault:"120"` // number of minutes before it expires
+}
 type Database struct {
 	Url string `env:"DATABASE_URL,notEmpty"`
 }
@@ -16,6 +20,7 @@ type Mail struct {
 }
 
 type Config struct {
+	Session  Session
 	Database Database
 	Mail     Mail
 }

@@ -1,0 +1,21 @@
+version: "2"
+
+sql:
+  - &psql-defaults
+    engine: postgresql
+    schema: ./database/schema.sql
+    queries: ./internal/authn/queries.sql
+    gen:
+      go: &gen-go-defaults
+        package: repository
+        out: ./internal/authn/repository
+        omit_unused_structs: true
+        query_parameter_limit: 3
+        sql_package: "pgx/v5"
+
+  - <<: *psql-defaults
+    queries: ./internal/user/queries.sql
+    gen:
+      go:
+        <<: *gen-go-defaults
+        out: ./internal/user/repository

@@ -17,10 +17,10 @@ build:
 
 .PHONY: dev
 dev:
-	test -f .env && . .env; air -c .air.toml .
+	[ -f .env ] && . .env; air -c .air.toml .
 
 db\:clean-dump:
-	 [[ -f .env ]] &&  source .env && ./scripts/clean-schema.sh
+	 [ -f .env ] && . .env; ./scripts/clean-schema.sh
 
 .PHONY: db\:dump
 db\:dump:
@@ -45,7 +45,7 @@ db\:seed:
 
 .PHONY: river\:db-dump
 river\:db-dump:
-	 [[ -f .env ]] &&  source .env && ./scripts/river-db-migrations.sh
+	 [ -f .env ] && . .env;  && ./scripts/river-db-migrations.sh
 
 .PHONY: sqlc
 sqlc:

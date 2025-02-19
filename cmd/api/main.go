@@ -1,10 +1,10 @@
 package main
 
 import (
-	"butta/internal/app/http"
+	"butta/internal/app/api"
+	"butta/pkg/logger"
 	"context"
 	"errors"
-	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -14,18 +14,19 @@ import (
 )
 
 func main() {
-	app.Bootstrap()
+
+	api.Bootstrap()
 
 	httpServer := &http.Server{
 		Addr:    serverAddress(),
-		Handler: app.ApplicationRoutes(), //register the app routes
+		Handler: api.Routes(), //register the app serve // mux
 	}
 
 	go runServer(httpServer) //run the app server in a goroutine
 
 	awaitShutdownSignal() //wait for shutdown signal from the system
 
-	app.Shutdown()                     //shutdown of the app
+	api.Shutdown()                     //shutdown of the app
 	serverGracefulShutdown(httpServer) //shutdown the app server
 }
 
@@ -37,7 +38,7 @@ func serverAddress() string {
 
 	host, found := os.LookupEnv("HOST")
 	if !found {
-		host = "localhost"
+		host = "0.0.0.0"
 	}
 
 	return net.JoinHostPort(host, port)
@@ -45,10 +46,10 @@ func serverAddress() string {
 
 func runServer(httpServer *http.Server) {
 
-	slog.Info("Starting server %s\n", httpServer.Addr)
+	logger.Info("Starting server ...", "address", httpServer.Addr)
 
 	if err := httpServer.ListenAndServe(); !errors.Is(http.ErrServerClosed, err) {
-		slog.Error("error listening: %s\n", err)
+		logger.Error("error listening", "error", err)
 	}
 }
 
@@ -56,7 +57,7 @@ func awaitShutdownSignal() {
 	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	<-signalChan
-	slog.Info("Received shutdown signal\n")
+	logger.Info("Received shutdown signal")
 }
 
 func serverGracefulShutdown(server *http.Server) {
@@ -64,9 +65,8 @@ func serverGracefulShutdown(server *http.Server) {
 	defer cancel()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {
-		slog.Error("error shutting down server: %s\n", err)
-		os.Exit(1)
+		logger.Fatal("error shutting down server", "err", err)
 	}
 
-	slog.Info("Server gracefully stopped")
+	logger.Info("Server gracefully stopped")
 }

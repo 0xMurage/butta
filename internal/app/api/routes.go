@@ -2,6 +2,7 @@ package api
 
 import (
 	"butta/internal/app/api/middleware"
+	"butta/internal/authn"
 	"butta/internal/pkg/config"
 	"butta/internal/user"
 	"butta/pkg/http/router"
@@ -14,6 +15,9 @@ func registerRoutes(cfg config.Config, pgPool *pgxpool.Pool) http.Handler {
 	mux := router.NewServeMux()
 
 	mux.Use(middleware.Logger) //add middleware that applies to all routes
+
+	authnHandler := authn.New(cfg, pgPool)
+	mux.Post("/api/v1/login", authnHandler.Login)
 
 	userHandlers := user.New(cfg, pgPool)
 	mux.Get("/api/v1/users", userHandlers.Index)

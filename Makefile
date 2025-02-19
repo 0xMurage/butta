@@ -43,11 +43,17 @@ db\:cm:
 db\:seed:
 	dbmate $([[ -f .env ]] && echo '--env-file .env') --migrations-table 'seed_migrations'	--migrations-dir './database/seeders' --no-dump-schema up
 
+.PHONY: river\:db-dump
 river\:db-dump:
 	 [[ -f .env ]] &&  source .env && ./scripts/river-db-migrations.sh
 
+.PHONY: sqlc
 sqlc:
 	sqlc generate
+
+.PHONY: queue\:work
+queue\:work:
+	[ -f .env ] && . .env; go run cmd/console/main.go
 
 .PHONY: install
 install:

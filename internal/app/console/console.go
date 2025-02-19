@@ -1,4 +1,4 @@
-package app
+package console
 
 import (
 	"butta/internal/authn"

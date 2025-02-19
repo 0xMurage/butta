@@ -4,6 +4,7 @@ import (
 	"butta/pkg/logger"
 	"butta/pkg/queue"
 	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type SendPasswordResetLinkJobArgs struct {
@@ -17,6 +18,7 @@ func (w SendPasswordResetLinkJobArgs) Kind() string {
 }
 
 type SendPasswordResetLinkWorker struct {
+	PsqlPool *pgxpool.Pool
 	// An embedded WorkerDefaults sets up default methods to fulfill the rest of
 	// the Worker interface:
 	queue.WorkerDefaults[SendPasswordResetLinkJobArgs]

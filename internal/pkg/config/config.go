@@ -1,5 +1,13 @@
 package config
 
+import (
+	"net/url"
+	"time"
+)
+
+type App struct {
+	Url url.URL `env:"APP_URL,required"`
+}
 type Session struct {
 	Secret   string        `env:"SESSION_SECRET,required"`
 	Lifetime time.Duration `env:"SESSION_LIFETIME" envDefault:"120m"` // the duration before it expires(with unit)
@@ -20,6 +28,7 @@ type Mail struct {
 }
 
 type Config struct {
+	App      App
 	Session  Session
 	Database Database
 	Mail     Mail

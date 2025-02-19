@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"math/rand/v2"
 	"strconv"
 	"time"
 )
@@ -51,4 +52,19 @@ func generateSecureSessionId(cf config.Session, profileId, accountId string) (st
 	signedSessionId := fmt.Sprintf("%s|%s|%s|%s", accountId, profileId, expiry, signature)
 
 	return signedSessionId, nil
+}
+
+func generatePasswordResetLink(cf config.Config, username string) (string, error) {
+	mac := hmac.New([]byte(cf.Session.Secret))
+
+	token := strconv.Itoa(int(rand.Uint32())) //adds just a bit of randomness to the url
+
+	parsedUrl := cf.App.Url.JoinPath("password-reset", token)
+
+	params := parsedUrl.Query()
+	params.Set("username", username)
+
+	parsedUrl.RawQuery = params.Encode()
+
+	return mac.SignUrl(*parsedUrl, 15*time.Minute) //expires after 15 minus
 }

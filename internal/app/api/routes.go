@@ -18,6 +18,7 @@ func registerRoutes(cfg config.Config, pgPool *pgxpool.Pool) http.Handler {
 
 	authnHandler := authn.New(cfg, pgPool)
 	mux.Post("/api/v1/login", authnHandler.Login)
+	mux.Post("/api/v1/forgot-password", authnHandler.ForgotPassword)
 
 	userHandlers := user.New(cfg, pgPool)
 	mux.Get("/api/v1/users", userHandlers.Index)

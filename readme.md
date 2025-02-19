@@ -1,5 +1,5 @@
-## Butta
-A GO-baed web application template
+## Butta 
+A Go based web application template
 ### Table of Contents
 - [Introduction](#introduction)
 - [Setup Instructions](#setup-instructions)
@@ -43,6 +43,14 @@ A Go-based web application application template using (best) practices.
 
 The `Makefile` provides several useful commands to facilitate development, testing, and deployment :
 
+#### Tools Installation
+
+- **`make install`**
+    - Installs necessary command line tools necessary for development of the system.
+      ```shell
+      make install
+      ```
+      
 #### Build and Run
 
 - **`make build`**
@@ -112,14 +120,12 @@ The `Makefile` provides several useful commands to facilitate development, testi
       make river:db-dump
       ```
 
-
-#### Tools Installation
-
-- **`make install`**
-    - Installs necessary command line tools necessary for development of the system.
-      ```shell
-      make install
+- **`make sqlc`**
+    - Generate type safe code for interacting with database form sql using [sqlc](https://sqlc.dev/)
+       ```shell
+      make sqlc
       ```
+
 
 ### License
 This project is licensed under the MIT License.

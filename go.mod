@@ -3,6 +3,7 @@ module butta
 go 1.24
 
 require (
+	github.com/caarlos0/env/v11 v11.3.1
 	github.com/jackc/pgx/v5 v5.7.2
 	github.com/pkg/errors v0.9.1
 	github.com/riverqueue/river v0.16.0

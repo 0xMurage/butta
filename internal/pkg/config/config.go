@@ -1,8 +1,8 @@
 package config
 
 type Session struct {
-	Secret   string `env:"SESSION_SECRET,required"`
-	Lifetime uint8  `env:"SESSION_LIFETIME" envDefault:"120"` // number of minutes before it expires
+	Secret   string        `env:"SESSION_SECRET,required"`
+	Lifetime time.Duration `env:"SESSION_LIFETIME" envDefault:"120m"` // the duration before it expires(with unit)
 }
 type Database struct {
 	Url string `env:"DATABASE_URL,notEmpty"`

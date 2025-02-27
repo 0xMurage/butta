@@ -13,7 +13,7 @@ LAST_MIGRATION_VERSION=$(cat "$MIGRATIONS_FILE")
 NEXT_MIGRATION_VERSION=$(($LAST_MIGRATION_VERSION+1))
 
 # If there are no migrations, exit
-river migrate-get --line main --version $NEXT_MIGRATION_VERSION --up > /dev/null 2>&1
+go tool river migrate-get --line main --version $NEXT_MIGRATION_VERSION --up > /dev/null 2>&1
 if [ $? -ne 0 ]; then
   echo "Migration v$NEXT_MIGRATION_VERSION not found"
   exit 1
@@ -29,13 +29,13 @@ echo > "$filename"
 echo "-- migrate:up\n" > "$filename"
 
 # Dump the up queries for that version
-river migrate-get --line main --version $NEXT_MIGRATION_VERSION --up >> "$filename"
+go tool river migrate-get --line main --version $NEXT_MIGRATION_VERSION --up >> "$filename"
 
 # Create comment to indicate it's the down command
 echo "\n\n-- migrate:down\n" >> "$filename"
 
 # Dump the down queries for that version
-river migrate-get --line main --version $NEXT_MIGRATION_VERSION --down >> "$filename"
+go tool river migrate-get --line main --version $NEXT_MIGRATION_VERSION --down >> "$filename"
 
 # Store next version
 echo $NEXT_MIGRATION_VERSION >"$MIGRATIONS_FILE"

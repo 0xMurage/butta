@@ -24,7 +24,7 @@ A Go-based web application application template using (best) practices.
    git clone git@github.com:0xMurage/butta.git
    cd butta
    ```
-2. **Install dependencies:**
+2. **Install tools and dependencies:**
    ```shell
    go mod download
    ```
@@ -43,14 +43,7 @@ A Go-based web application application template using (best) practices.
 
 The `Makefile` provides several useful commands to facilitate development, testing, and deployment :
 
-#### Tools Installation
-
-- **`make install`**
-    - Installs necessary command line tools necessary for development of the system.
-      ```shell
-      make install
-      ```
-      
+ 
 #### Build and Run
 
 - **`make build`**

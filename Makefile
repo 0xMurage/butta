@@ -17,31 +17,31 @@ build:
 
 .PHONY: dev
 dev:
-	[ -f .env ] && . .env; air -c .air.toml .
+	[ -f .env ] && . .env; go tool air -c .air.toml .
 
 db\:clean-dump:
 	 [ -f .env ] && . .env; ./scripts/clean-schema.sh
 
 .PHONY: db\:dump
 db\:dump:
-	dbmate $([[ -f .env ]] && echo '--env-file .env') dump
+	go tool dbmate $([[ -f .env ]] && echo '--env-file .env') dump
 
 .PHONY: db\:migrate
 db\:migrate:
-	dbmate $([[ -f .env ]] && echo '--env-file .env') up
+	go tool dbmate $([[ -f .env ]] && echo '--env-file .env') up
 	$(MAKE) db\:clean-dump
 
 .PHONY: db\:rollback
 db\:rollback:
-	dbmate $([[ -f .env ]] && echo '--env-file .env') rollback
+	go tool dbmate $([[ -f .env ]] && echo '--env-file .env') rollback
 
 .PHONY: db\:cm
 db\:cm:
-	 @dbmate $([[ -f .env ]] && echo '--env-file .env') new $(filter-out $@,$(MAKECMDGOALS))
+	 @go tool dbmate $([[ -f .env ]] && echo '--env-file .env') new $(filter-out $@,$(MAKECMDGOALS))
 
 .PHONY: db\:seed
 db\:seed:
-	dbmate $([[ -f .env ]] && echo '--env-file .env') --migrations-table 'seed_migrations'	--migrations-dir './database/seeders' --no-dump-schema up
+	go tool dbmate $([[ -f .env ]] && echo '--env-file .env') --migrations-table 'seed_migrations'	--migrations-dir './database/seeders' --no-dump-schema up
 
 .PHONY: river\:db-dump
 river\:db-dump:
@@ -49,23 +49,11 @@ river\:db-dump:
 
 .PHONY: sqlc
 sqlc:
-	sqlc generate
+	go tool sqlc generate
 
 .PHONY: queue\:work
 queue\:work:
 	[ -f .env ] && . .env; go run cmd/console/main.go
-
-.PHONY: install
-install:
-	@# install Air verse
-	go install 'github.com/air-verse/air@latest'
-	@# install db-mate to manage migrations
-	go install 'github.com/amacneil/dbmate/v2@v2.25'
-	@# install river cmd client for migrations export
-	go install 'github.com/riverqueue/river/cmd/river@v0.16'
-	@# sqlc to generate type safe code from sql
-	go install 'github.com/sqlc-dev/sqlc/cmd/sqlc@latest'
-
 
 
 %: #catch all command

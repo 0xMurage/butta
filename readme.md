@@ -10,6 +10,11 @@ A Go based web application template
 ### Introduction
 A Go-based web application application template using (best) practices.
 
+### Demo
+You can try out this template right in your browser using the button below:
+
+[![Open In Devspace](https://www.jetify.com/img/devbox/open-in-devspace.svg)](https://cloud.jetify.com/new/github.com/0xMurage/butta)
+
 ### Setup Instructions
 #### Prerequisites
 - Go version 1.23 or higher.
